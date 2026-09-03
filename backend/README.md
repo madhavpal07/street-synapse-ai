@@ -20,7 +20,7 @@ Interactive API documentation is available at `http://127.0.0.1:8000/docs`.
 ## Test
 
 ```bash
-pytest
+python -m pytest
 ```
 
 ## Next backend milestones
@@ -31,4 +31,3 @@ pytest
 4. WebSocket vehicle updates
 5. Agency assignment and ticket audit log
 6. Route matching and ETA service
-

@@ -57,7 +57,7 @@ Open `http://127.0.0.1:8000/docs` to test the API visually.
 Run tests:
 
 ```bash
-pytest
+python -m pytest
 ```
 
 ## Shared rules
@@ -69,4 +69,3 @@ pytest
 - Record real measurements; never present an untested accuracy claim.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the exact Git workflow.
-
