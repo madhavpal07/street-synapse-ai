@@ -55,4 +55,5 @@ captures/
 .vscode/
 .DS_Store
 Thumbs.db
-
+ml/detected_frames/
+ml/unique_frames/
