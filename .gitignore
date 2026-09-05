@@ -55,4 +55,4 @@ captures/
 .vscode/
 .DS_Store
 Thumbs.db
-
+*.db
