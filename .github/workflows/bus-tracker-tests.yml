@@ -1,0 +1,35 @@
+name: Bus tracker checks
+
+on:
+  push:
+    paths:
+      - "bus-tracker/**"
+      - ".github/workflows/bus-tracker-tests.yml"
+  pull_request:
+    paths:
+      - "bus-tracker/**"
+      - ".github/workflows/bus-tracker-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bus-tracker
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: bus-tracker/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:app
+        timeout-minutes: 3

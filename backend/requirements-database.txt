@@ -1,0 +1,2 @@
+# Optional database prototype, not yet wired into app/main.py
+SQLAlchemy==2.0.54

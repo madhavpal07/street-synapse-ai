@@ -57,3 +57,23 @@ captures/
 Thumbs.db
 ml/detected_frames/
 ml/unique_frames/
+
+# Private evidence, local databases and runtime output
+phone_live_outputs/
+offline_outputs/
+uploads/
+logs/
+*.log
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.tsbuildinfo
+coverage/
+.env.local
+.openai/
+.sites-runtime/
+
+# Keep example configuration visible, never real credentials
+!.env.example

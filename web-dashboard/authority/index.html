@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StreetSynapse AI | Road Hazard Command Center</title>
+
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --panel: rgba(15, 23, 42, 0.9);
+      --line: rgba(148, 163, 184, 0.18);
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #facc15;
+      --orange: #fb923c;
+      --red: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(34,197,94,.18), transparent 28%),
+        radial-gradient(circle at 80% 10%, rgba(56,189,248,.14), transparent 30%),
+        linear-gradient(135deg, #050816, #07111f 46%, #020617);
+    }
+
+    header {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar {
+      max-width: 1460px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .brand span { color: var(--green); }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .live-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, .35);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(34,197,94,.8);
+      animation: pulse 1.4s infinite;
+    }
+
+    @keyframes pulse {
+      70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+
+    main {
+      max-width: 1460px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 22px 60px rgba(0,0,0,.28);
+      overflow: hidden;
+    }
+
+    .hero-copy {
+      padding: 28px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(120deg, rgba(34,197,94,.16), transparent 48%),
+        linear-gradient(135deg, rgba(15,23,42,.96), rgba(15,23,42,.72));
+    }
+
+    .hero-copy h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.03;
+    }
+
+    .hero-copy h2 span { color: var(--green); }
+
+    .hero-copy p {
+      color: #cbd5e1;
+      font-size: 17px;
+      line-height: 1.6;
+      margin: 16px 0 0;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button, .ghost {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 850;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      box-shadow: 0 10px 24px rgba(34,197,94,.18);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ghost {
+      background: rgba(148,163,184,.12);
+      border: 1px solid var(--line);
+      color: #e2e8f0;
+      box-shadow: none;
+    }
+
+    #cityMap { width:100%; height:420px; position:relative; z-index:0; background:#e5e7eb; }
+    .map-toolbar {display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px}
+    #mapStatus {padding:12px;color:var(--muted);font-size:14px}
+    #mapError {padding:12px;background:#692323;color:white}
+    .leaflet-popup-content {color:#18211b;max-height:240px;overflow:auto}
+    .leaflet-popup-content button {margin:8px 0}
+    .hero > *, .layout > * {min-width:0}
+    .row b {overflow-wrap:anywhere;min-width:0;text-align:right}
+    .incident-body .badge {white-space:normal}
+    .map-title {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      background: rgba(2,6,23,.78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      z-index: 5;
+    }
+
+    .map-title strong { display: block; }
+
+    .map-title span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .map-legend {
+      position: absolute;
+      z-index: 5;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(2,6,23,.86);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      color: white;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+
+    .legend-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 5px 0;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .hazard-pin {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 3px solid rgba(255,255,255,.92);
+      box-shadow: 0 0 0 8px rgba(239,68,68,.14), 0 14px 26px rgba(0,0,0,.35);
+      cursor: pointer;
+      z-index: 4;
+    }
+
+    .hazard-pin::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 18px;
+      top: -9px;
+      white-space: nowrap;
+      color: white;
+      background: rgba(2,6,23,.86);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 4px 7px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+    }
+
+    .hazard-pin:hover::after { opacity: 1; }
+
+    .hazard-critical { background: #ef4444; }
+    .hazard-medium { background: #fb923c; box-shadow: 0 0 0 8px rgba(251,146,60,.14), 0 14px 26px rgba(0,0,0,.35); }
+    .hazard-low { background: #facc15; box-shadow: 0 0 0 8px rgba(250,204,21,.14), 0 14px 26px rgba(0,0,0,.35); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .stat small {
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 34px;
+    }
+
+    .critical strong { color: var(--red); }
+    .queue strong { color: var(--yellow); }
+    .progress strong { color: var(--blue); }
+    .resolved strong { color: var(--green); }
+
+    .search-panel {
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr 180px 180px;
+      gap: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(2,6,23,.65);
+      color: white;
+      padding: 13px 14px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input::placeholder { color: #64748b; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+    }
+
+    .section-title {
+      padding: 18px 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .records {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 16px;
+    }
+
+    .incident {
+      background: rgba(15, 23, 42, .92);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .incident:hover {
+      transform: translateY(-3px);
+      border-color: rgba(34,197,94,.45);
+    }
+
+    .evidence-image {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      background: #020617;
+      display: none;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .image-toggle {
+      width: calc(100% - 28px);
+      margin: 14px 14px 0;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #bae6fd;
+      box-shadow: none;
+    }
+
+    .incident-body { padding: 14px; }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #dbeafe;
+      border-bottom: 1px solid rgba(148,163,184,.12);
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .row span:first-child { color: var(--muted); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      background: rgba(34,197,94,.14);
+      color: #bbf7d0;
+      border: 1px solid rgba(34,197,94,.32);
+      white-space: nowrap;
+    }
+
+    .severity-critical {
+      color: #fecaca;
+      background: rgba(239,68,68,.16);
+      border-color: rgba(239,68,68,.38);
+    }
+
+    .severity-medium {
+      color: #fed7aa;
+      background: rgba(251,146,60,.14);
+      border-color: rgba(251,146,60,.35);
+    }
+
+    .severity-low {
+      color: #fef08a;
+      background: rgba(250,204,21,.12);
+      border-color: rgba(250,204,21,.28);
+    }
+
+    .map-link {
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .side {
+      display: grid;
+      gap: 20px;
+      align-content: start;
+    }
+
+    .queue-list {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .queue-item {
+      border: 1px solid var(--line);
+      background: rgba(2,6,23,.4);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .queue-item strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty {
+      padding: 24px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1100px) {
+      .hero, .layout { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 650px) {
+      main { padding: 14px; }
+      header { padding: 16px; }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .stats { grid-template-columns: 1fr; }
+      .search-row { grid-template-columns: 1fr; }
+      .hero-copy { padding: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <h1>Street<span>Synapse</span> AI</h1>
+      <p>Road hazard intelligence for city repair prioritization</p>
+    </div>
+    <div class="live-pill" id="connectionStatus" role="status">Connecting...</div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="panel hero-copy">
+      <div>
+        <h2>Critical road hazards, <span>ranked by priority.</span></h2>
+        <p>
+          AI-detected potholes are converted into location-aware incidents.
+          The dashboard separates critical, medium and low-priority road hazards
+          so city teams can respond faster.
+        </p>
+      </div>
+
+      <div class="actions">
+        <button onclick="loadPotholes()">Refresh Dashboard</button>
+        <a class="ghost" id="rawApiLink" href="http://127.0.0.1:5000/api/v1/incidents?event_type=pothole" target="_blank" rel="noopener noreferrer">View Raw API</a>
+      </div>
+    </div>
+
+    <div class="panel" style="position:relative">
+      <div class="map-toolbar"><strong>City Hazard Map</strong><button type="button" onclick="fitHazards()">Fit incidents</button><button type="button" onclick="retryMap()">Reload map</button></div>
+      <div id="mapError" role="alert" hidden></div>
+      <div id="cityMap" aria-label="Road hazard locations"></div>
+      <div id="mapStatus" role="status">Loading map...</div>
+      <div class="map-legend" style="position:static;border:0;border-radius:0;display:flex;gap:12px;flex-wrap:wrap">
+        <b>Hazard Priority</b>
+        <div class="legend-row"><span class="dot" style="background:#ef4444"></span> Critical</div>
+        <div class="legend-row"><span class="dot" style="background:#fb923c"></span> Medium</div>
+        <div class="legend-row"><span class="dot" style="background:#facc15"></span> Low / Needs review</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><small>Active Vehicles</small><strong id="vehicles">0</strong></div>
+    <div class="stat critical"><small>Critical Hazards</small><strong id="critical">0</strong></div>
+    <div class="stat queue"><small>Active Queue</small><strong id="queue">0</strong></div>
+    <div class="stat progress"><small>In Progress</small><strong id="progress">0</strong></div>
+    <div class="stat resolved"><small>Resolved</small><strong id="resolved">0</strong></div>
+  </section>
+
+  <section class="panel search-panel">
+    <div class="search-row">
+      <input id="searchInput" oninput="applyFilters()" placeholder="Search by ID, source, status, coordinates..." />
+      <select id="priorityFilter" onchange="applyFilters()">
+        <option value="all">All priorities</option>
+        <option value="critical">Critical</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option><option value="review">Needs review</option>
+      </select>
+      <select id="statusFilter" onchange="applyFilters()">
+        <option value="all">All status</option>
+        <option value="queue">Active queue</option>
+        <option value="in_progress">In progress</option>
+        <option value="resolved">Resolved</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="layout">
+    <div class="panel">
+      <div class="section-title">
+        <h3>Active Road Hazard Incidents</h3>
+        <span class="badge">Severity / Review</span>
+      </div>
+      <div id="records" class="records"></div>
+    </div>
+
+    <aside class="side">
+      <div class="panel">
+        <div class="section-title">
+          <h3>Repair Priority Queue</h3>
+          <span class="badge severity-critical">Critical First</span>
+        </div>
+        <div id="priorityQueue" class="queue-list"></div>
+      </div>
+
+    </aside>
+  </section>
+</main>
+
+<script>
+
+// The default reads the existing repository's FastAPI service.
+// A different backend can set window.SAWAARI_API before this script loads.
+const apiConfig = window.SAWAARI_API || {};
+const API_BASE = (apiConfig.base || "http://127.0.0.1:5000").replace(/\/+$/, "");
+const API_PATH = apiConfig.path || "/api/v1/incidents?event_type=pothole";
+document.getElementById("rawApiLink").href = API_BASE + API_PATH;
+function normalizeIncident(item) {
+  return {
+    ...item,
+    source: item.source ?? item.vehicle_id,
+    captured_at: item.captured_at ?? item.timestamp,
+    image_url: item.image_url ?? item.evidence_url,
+  };
+}
+const rank = {critical:3, medium:2, low:1, review:0};
+const colors = {critical:"#ef4444", medium:"#fb923c", low:"#facc15", review:"#facc15"};
+let allPotholes = [], map = null, markers = null, initialFit = false, loading = false;
+let renderedData = "", renderedMap = "", renderedPoints = [];
+const openImages = new Set();
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function confidence(item) {
+  const c = Number(item.confidence);
+  return Number.isFinite(c) ? Math.max(0, Math.min(1, c)) : 0;
+}
+function priorityOf(item) {
+  // Confidence measures model certainty, not physical hazard severity.
+  const p = String(item.severity || "").toLowerCase();
+  return Object.hasOwn(rank, p) ? p : "review";
+}
+function priorityText(item) {
+  return {critical:"CRITICAL ROAD HAZARD",medium:"MEDIUM ROAD HAZARD",low:"LOW ROAD HAZARD",review:"NEEDS REVIEW"}[priorityOf(item)];
+}
+function priorityClass(item) {
+  const p = priorityOf(item);
+  return "severity-" + (p === "review" ? "low" : p);
+}
+function normalizedStatus(item) {
+  const s = String(item.status || "").toLowerCase().trim();
+  if (["resolved","complete","completed"].includes(s)) return "resolved";
+  if (["in_progress","in progress","assigned","repairing"].includes(s)) return "in_progress";
+  return "queue";
+}
+function statusLabel(item) {
+  return {queue:"Active Queue",in_progress:"In Progress",resolved:"Resolved"}[normalizedStatus(item)];
+}
+function coordinates(item) {
+  const values = [item.latitude, item.longitude];
+  if (values.some(v => v == null || (typeof v !== "number" && typeof v !== "string") || String(v).trim() === "")) return null;
+  const [lat,lng] = values.map(Number);
+  return Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat)<=90 && Math.abs(lng)<=180 ? [lat,lng] : null;
+}
+function mapsURL(item) {
+  const p = coordinates(item);
+  return p ? "https://www.google.com/maps?q=" + encodeURIComponent(p.join(",")) : "";
+}
+function imageURL(item) {
+  if (!item.image_url) return "";
+  try {
+    const u = new URL(item.image_url, API_BASE);
+    return u.origin === API_BASE && u.pathname.startsWith("/uploads/") ? u.href : "";
+  } catch { return ""; }
+}
+function showMapError(message) {
+  const box = document.getElementById("mapError");
+  box.textContent = message; box.hidden = !message;
+}
+let mapResizeObserver = null;
+function retryMap() {
+  if (mapResizeObserver) { mapResizeObserver.disconnect(); mapResizeObserver = null; }
+  if (map) { map.remove(); map = null; }
+  markers = null; initialFit = false; renderedMap = "";
+  showMapError("");
+  initMap();
+  if (map) applyFilters();
+}
+function initMap() {
+  if (map) return;
+  if (location.protocol === "file:") {
+    showMapError("Open this dashboard through http://127.0.0.1:5500/, not by double-clicking the HTML file. Map tiles are disabled in file mode.");
+    return;
+  }
+  if (!window.L) {
+    showMapError("Map library could not load. Check internet access to unpkg.com and reload.");
+    return;
+  }
+  map = L.map("cityMap").setView([22.5,79],5);
+  markers = L.featureGroup().addTo(map);
+  L.control.scale({imperial:false}).addTo(map);
+  const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom:19,
+    referrerPolicy:"strict-origin-when-cross-origin",
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+  let failures = 0;
+  tiles.on("loading", () => { failures = 0; });
+  tiles.on("tileerror", () => {
+    failures++;
+    showMapError("Map tiles unavailable or blocked. Check internet/referrer settings. Incident coordinates remain available below.");
+  });
+  tiles.on("load", () => { if (!failures) showMapError(""); });
+  tiles.addTo(map);
+  if (typeof ResizeObserver !== "undefined") {
+    mapResizeObserver = new ResizeObserver(() => { if (map) map.invalidateSize(); });
+    mapResizeObserver.observe(document.getElementById("cityMap"));
+  }
+  requestAnimationFrame(() => { if (map) map.invalidateSize(); });
+}
+function fitHazards() {
+  if (map && markers && markers.getLayers().length) {
+    map.fitBounds(markers.getBounds(), {padding:[35,35], maxZoom:17});
+  }
+}
+function updateMap(data) {
+  const points = data.map(item => ({item, point:coordinates(item)})).filter(p => p.point);
+  document.getElementById("mapStatus").textContent = points.length
+    ? points.length + " located incidents; " + (data.length-points.length) + " without valid GPS."
+    : "No matching incidents with valid GPS. No locations have been invented.";
+  if (!map) return;
+  const signature = JSON.stringify(points);
+  if (signature === renderedMap) return;
+  renderedMap = signature; renderedPoints = points;
+  markers.clearLayers();
+  // Exact duplicate coordinates share a popup; their GPS positions are never jittered.
+  const groups = new Map();
+  for (const {item,point} of points) {
+    const key = point.join(",");
+    if (!groups.has(key)) groups.set(key, {point, items:[]});
+    groups.get(key).items.push(item);
+  }
+  for (const {point,items} of groups.values()) {
+    items.sort((a,b) => rank[priorityOf(b)]-rank[priorityOf(a)]);
+    const popup = document.createElement("div");
+    for (const item of items) {
+      const section = document.createElement("section");
+      const label = document.createElement("p");
+      label.textContent = "#" + item.id + " | " + priorityText(item) + " | " + statusLabel(item);
+      section.append(label);
+      const coords = document.createElement("p");
+      coords.textContent = point[0].toFixed(6) + ", " + point[1].toFixed(6);
+      section.append(coords);
+      const link = document.createElement("a");
+      link.textContent = "Open in Google Maps"; link.href = mapsURL(item);
+      link.target = "_blank"; link.rel = "noopener noreferrer"; section.append(link);
+      if (imageURL(item)) {
+        const button = document.createElement("button");
+        button.textContent = "Show Evidence Image";
+        button.onclick = () => {
+          const index = allPotholes.findIndex(i => String(i.id) === String(item.id));
+          if (index < 0) return;
+          if (!openImages.has(String(item.id))) toggleImage(index);
+          document.getElementById("image-" + index)?.scrollIntoView({behavior:"smooth",block:"center"});
+        };
+        section.append(document.createElement("br"),button);
+      }
+      popup.append(section);
+    }
+    L.circleMarker(point, {radius:items.length>1 ? 12 : 9, color:"#ffffff",
+      weight:2, fillColor:colors[priorityOf(items[0])], fillOpacity:0.95})
+      .bindPopup(popup).bindTooltip(items.length + " incident(s) at this location").addTo(markers);
+  }
+  if (points.length && !initialFit) {fitHazards(); initialFit=true;}
+}
+function toggleImage(index) {
+  const item = allPotholes[index], image = document.getElementById("image-"+index);
+  if (!item || !image) return;
+  const key = String(item.id), show = !openImages.has(key);
+  if (show) {openImages.add(key); image.src = image.dataset.src;} else openImages.delete(key);
+  image.style.display = show ? "block" : "none";
+  document.getElementById("button-"+index).textContent = show ? "Hide Evidence Image" : "Show Evidence Image";
+}
+function updateStats(data) {
+  document.getElementById("vehicles").textContent = "N/A";
+  document.getElementById("vehicles").title = "Vehicle telemetry is not connected.";
+  document.getElementById("critical").textContent = data.filter(i => priorityOf(i)==="critical" && normalizedStatus(i)!=="resolved").length;
+  for (const [id,s] of [["queue","queue"],["progress","in_progress"],["resolved","resolved"]])
+    document.getElementById(id).textContent = data.filter(i=>normalizedStatus(i)===s).length;
+}
+function renderQueue(data) {
+  const items = [...data].filter(i=>normalizedStatus(i)!=="resolved")
+    .sort((a,b)=>rank[priorityOf(b)]-rank[priorityOf(a)]).slice(0,5);
+  document.getElementById("priorityQueue").innerHTML = items.length ? items.map(i=>
+    '<div class="queue-item"><strong>Pothole #'+escapeHTML(i.id)+'</strong><div class="muted">'+priorityText(i)+'</div><div class="muted">'+statusLabel(i)+'</div></div>').join("")
+    : '<div class="empty">No active repair queue.</div>';
+}
+function renderRecords(data) {
+  document.getElementById("records").innerHTML = data.length ? data.map(item => {
+    const index = allPotholes.indexOf(item), url = imageURL(item), visible = openImages.has(String(item.id));
+    const rows = [["Confidence",(confidence(item)*100).toFixed(1)+"%"],["Status",statusLabel(item)],
+      ["Latitude",item.latitude ?? "N/A"],["Longitude",item.longitude ?? "N/A"],
+      ["Accuracy",item.accuracy_metres == null ? "N/A" : item.accuracy_metres+" m"],
+      ["Source",item.source],["Captured",item.captured_at]];
+    return '<article class="incident">'+(url ?
+      '<button class="image-toggle" id="button-'+index+'" onclick="toggleImage('+index+')">'+(visible?"Hide":"Show")+' Evidence Image</button>'+
+      '<img id="image-'+index+'" class="evidence-image" data-src="'+escapeHTML(url)+'" '+(visible?'src="'+escapeHTML(url)+'"':'')+' style="display:'+(visible?'block':'none')+'" alt="Pothole evidence">' : "")+
+      '<div class="incident-body"><strong>Pothole #'+escapeHTML(item.id)+'</strong> <span class="badge '+priorityClass(item)+'">'+priorityText(item)+'</span>'+
+      rows.map(([k,v])=>'<div class="row"><span>'+k+'</span><b>'+escapeHTML(v)+'</b></div>').join("")+
+      (coordinates(item)?'<a class="ghost map-link" href="'+mapsURL(item)+'" target="_blank" rel="noopener noreferrer">Open Location in Google Maps</a>':'<p class="muted">GPS unavailable</p>')+'</div></article>';
+  }).join("") : '<div class="empty">No matching road hazard records found.</div>';
+}
+function applyFilters() {
+  const search = document.getElementById("searchInput").value.toLowerCase().trim();
+  const priority = document.getElementById("priorityFilter").value;
+  const status = document.getElementById("statusFilter").value;
+  const filtered = allPotholes.filter(i =>
+    (priority==="all" || priorityOf(i)===priority) &&
+    (status==="all" || normalizedStatus(i)===status) &&
+    [i.id,i.status,i.source,i.latitude,i.longitude,i.captured_at,priorityText(i)].join(" ").toLowerCase().includes(search));
+  renderRecords(filtered); renderQueue(filtered); updateMap(filtered);
+}
+async function loadPotholes() {
+  if (loading) return;
+  loading = true;
+  try {
+    const response = await fetch(API_BASE+API_PATH, {signal:AbortSignal.timeout(10000)});
+    if (!response.ok) throw Error("HTTP "+response.status);
+    const data = await response.json();
+    if (!Array.isArray(data)) throw Error("Expected incident array");
+    document.getElementById("connectionStatus").textContent = "Backend connected";
+    const signature = JSON.stringify(data);
+    if (signature !== renderedData) {
+      allPotholes=data.map(normalizeIncident); renderedData=signature; updateStats(allPotholes); applyFilters();
+    }
+  } catch (error) {
+    document.getElementById("connectionStatus").textContent = "Backend unavailable";
+    if (!renderedData) document.getElementById("records").innerHTML =
+      '<div class="empty">Backend unavailable. Start run_backend.bat; allow this dashboard origin in backend CORS settings.</div>';
+  } finally {loading=false;}
+}
+initMap();
+loadPotholes();
+setInterval(loadPotholes,8000);
+</script>
+</body>
+</html>

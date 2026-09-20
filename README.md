@@ -1,71 +1,77 @@
-# StreetSynapse AI
+# SAWAARI / StreetSynapse AI
 
-> The city senses through every journey.
+SIH 2026 project source: phone-based live bus tracking and pothole detection.
+Only SIH-related work belongs here.
 
-StreetSynapse AI is an edge-AI urban intelligence and real-time transit platform for Smart India Hackathon 2026 problem statement SIH26124. Public transport vehicles act as mobile sensing units: they detect road hazards, attach trustworthy location evidence, suppress duplicate reports, and support both municipal action and passenger-facing bus information.
+**This is a prototype source repository, not a claim of complete end-to-end deployment.**
+The bus-tracking app is integrated. The phone detector currently saves evidence
+locally; it does not automatically upload incidents to the FastAPI service.
 
-## First working milestone
+## Project map
 
-The team is building one complete path before adding more features:
+| Folder | Contents |
+| --- | --- |
+| [bus-tracker/](bus-tracker/) | Integrated Next.js passenger UI, authenticated fleet dashboard, browser driver page and Express/Socket.IO server |
+| [ml/](ml/) | Saved phone-camera detector, offline video detection, track-ID filtering and dataset conversion |
+| [web-dashboard/authority/](web-dashboard/authority/) | Leaflet pothole dashboard, adapted to the existing FastAPI incident list |
+| [backend/](backend/) | Existing in-memory FastAPI API and a separate SQLAlchemy database prototype |
+| [designs/citytransit-prototype/](designs/citytransit-prototype/) | Original standalone passenger UI with mock data; design reference only |
+| [transit-data/](transit-data/) | Route-data guidance; active sample routes live in bus-tracker/lib/routes.js |
+| [docs/](docs/) | Setup, module status, API contract, source inventory and flowchart |
+| [scripts/](scripts/) | Windows launchers |
+| [tests/](tests/) | Repository-level validation guidance |
+| [edge-android/](edge-android/) | Preserved original Android plan, not an implemented app |
 
-1. Detect a pothole or waterlogged road segment.
-2. Attach vehicle ID, GPS position, heading, confidence, and timestamp.
-3. Send the event to the central API.
-4. Merge repeated observations of the same incident.
-5. Display the incident on the authority dashboard.
-6. Stream the same vehicle's location to the passenger view.
+## Start the bus-tracking demo
 
-Garbage overflow, streetlight monitoring, advanced ANPR, and city-scale prediction remain later modules until this flow is reliable.
+Node.js 24 or newer is required by the imported app.
 
-## Repository map
-
-| Path | Owner | Purpose |
-|---|---|---|
-| `ml/` | Members 1–2 | Dataset, training, evaluation, and model export |
-| `edge-android/` | Member 3 | Camera, GPS, edge inference, and offline sync |
-| `backend/` | Member 4 | API, deduplication, database, tickets, and live updates |
-| `web-dashboard/` | Member 5 | Authority dashboard and passenger map |
-| `transit-data/` | Member 6 | Routes, stops, ETA logic, integration testing |
-| `docs/` | Everyone | Shared architecture, API contract, and workflow |
-
-## Run the starter backend
-
-```bash
-cd backend
-python -m venv .venv
+```sh
+cd bus-tracker
+npm ci
+npm run setup
+npm run build
+npm start
 ```
 
-Activate the environment:
+- Passenger page: http://localhost:3000/
+- Private fleet dashboard: http://localhost:3000/dashboard
+- Driver page: http://localhost:3000/driver/
 
-```bash
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
+Setup generates private keys in an ignored .env file and preserves existing keys.
+For phone location, use HTTPS and explicitly allow GPS. Read
+[bus-tracker/START-HERE.md](bus-tracker/START-HERE.md).
 
-# macOS/Linux
-source .venv/bin/activate
-```
+## Pothole modules
 
-Install and run:
+See [setup guide](docs/setup-guide.md) for Python setup and ports.
+The saved phone detector requires a trusted trained pothole model at
+ml/models/best.pt. Model weights and private GPS evidence are not included.
 
-```bash
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
+The government dashboard reads the existing incident API. It remains empty
+until incidents are submitted. Image upload/storage and the automatic
+ML-to-API bridge are not part of the available source.
 
-Open `http://127.0.0.1:8000/docs` to test the API visually.
+## Current limits
 
-Run tests:
+- Live bus positions are real phone inputs, but route coordinates are illustrative.
+  Production routes, traffic-based ETA, fares and timetables are not supplied.
+- Bus locations and FastAPI incidents are in memory and reset on server restart.
+- The database prototype is not wired into the running API.
+- A detection confidence score is not accuracy, physical severity or human verification.
+- The historical pitch deck and flowchart include intended features; they do not
+  override the [current source status](docs/module-status.md).
+- No production authentication, deployment or fleet-scale validation is claimed.
 
-```bash
-python -m pytest
-```
+[Source inventory](docs/source-inventory.md) records what was imported and what
+is unavailable. [Verification](docs/verification.md) records checks performed.
 
-## Shared rules
+## Team workflow and privacy
 
-- Read [`docs/api-contract.md`](docs/api-contract.md) before building a module.
-- Work on a feature branch; never develop directly on `main`.
-- Keep datasets, raw video, model weights, secrets, and local environments out of Git.
-- Use small pull requests and integrate every day.
-- Record real measurements; never present an untested accuracy claim.
+Use a feature branch and pull request, as described in [CONTRIBUTING.md](CONTRIBUTING.md).
+Keep real .env files, credentials, databases, datasets, raw videos and location
+evidence out of Git. Do not expose the unauthenticated incident API or camera
+server to the public internet without adding access control.
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the exact Git workflow.
+No license has been selected for the team's source. Third-party dependencies
+retain their respective licenses.

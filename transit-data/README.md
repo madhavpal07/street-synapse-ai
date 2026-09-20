@@ -1,20 +1,14 @@
-# Transit and ETA module
+# Transit data
 
-## First milestone
+The active sample route, stop sequence and bus assignments are in
+[bus-tracker/lib/routes.js](../bus-tracker/lib/routes.js). Maintain that one source
+rather than duplicating routes.json/stops.json with conflicting coordinates.
 
-Create one demonstration route with:
+This is demonstration data, not an operator-verified transport network.
+The passenger app filters stops by direction and uses straight-line distances;
+it does not calculate traffic-aware arrival times.
 
-- One agency
-- One route
-- At least eight ordered stops
-- One route shape
-- One trip
-- Scheduled stop times
-
-The first ETA can use remaining route distance, rolling speed, and fixed stop dwell time. ML-based ETA must wait until real trip history exists.
-
-Target interoperability:
-
-- GTFS Static for routes, stops, trips, stop times, and shapes
-- GTFS-Realtime Vehicle Positions and Trip Updates for live output
+Future data handoff: verified agencies, routes, stops, shapes, trips and stop
+times, with a source and license. GTFS Static / GTFS-Realtime remain intended
+interoperability targets, not implemented exports.
 
