@@ -22,7 +22,8 @@
 4. Validate real phone camera/GPS, duplicate behavior and multi-device isolation.
 5. Protect all incident and camera endpoints before external deployment.
 
-The September 14 pitch deck is preserved as a historical source.
+The supplied SIH pitch deck was inspected as a historical source but is not
+included in this import because its binary transfer did not finish.
 It references intended mobile inference, Streamlit, ETA, DBSCAN and offline sync
 that the checked-in source does not establish as implemented. Do not use that
 deck as proof of working features.
