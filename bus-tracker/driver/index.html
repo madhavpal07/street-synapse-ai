@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#12233e" />
+  <meta name="description" content="Share this bus's GPS location from your phone." />
+  <title>Driver Emitter | StreetSynapse</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/driver/driver.css" />
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="/driver/driver.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="/"><img src="/favicon.svg" alt="" width="34" height="34" /><span>StreetSynapse<small>DRIVER EMITTER</small></span></a><a class="dashboard-link" href="/">Live map ↗</a></header>
+  <main>
+    <div class="intro"><p class="eyebrow">YOUR PHONE. YOUR BUS.</p><h1>Share your bus location</h1><p>Start sharing before the journey. Keep this page open and your phone screen on.</p></div>
+    <section class="card">
+      <div class="card-heading"><h2>Driver connection</h2><span id="connection" class="badge">Not connected</span></div>
+      <form id="driver-form">
+        <label for="bus-id">Bus ID</label><input id="bus-id" name="bus-id" type="text" value="BUS-001" pattern="[A-Za-z0-9-]{1,24}" maxlength="24" autoCapitalize="characters" spellcheck="false" required />
+        <label for="driver-key">Driver key</label><input id="driver-key" name="driver-key" type="password" placeholder="Key assigned to this bus" autoComplete="off" required />
+        <p class="privacy-note">Tapping Start sharing requests location permission and sends this phone’s coordinates to your tracking dashboard until you stop.</p>
+        <div class="actions"><button id="start" class="primary" type="submit">Start sharing</button><button id="stop" class="stop" type="button" disabled>Stop sharing</button></div>
+      </form>
+      <div id="status" class="status" role="status" aria-live="polite">Ready. Enter the driver key to begin.</div>
+    </section>
+    <section class="card reading-card" aria-label="GPS reading">
+      <div class="card-heading"><h2>Your GPS reading</h2><span id="gps-state" class="badge">Waiting</span></div>
+      <div class="coordinate-box"><span>Latitude / longitude</span><strong id="coordinates">—</strong></div>
+      <dl class="metrics"><div><dt>Accuracy</dt><dd id="accuracy">—</dd></div><div><dt>Speed</dt><dd id="speed">—</dd></div><div><dt>GPS reading age</dt><dd id="gps-age">—</dd></div><div><dt>Confirmed updates</dt><dd id="sent-count">0</dd></div></dl>
+      <p class="last-confirmed">Last server confirmation: <strong id="last-confirmed">None</strong></p>
+    </section>
+    <div id="visibility-warning" class="warning" hidden>Sharing can pause when this tab is hidden or your screen is locked. Return to this page and keep the screen on.</div>
+    <div class="help"><h2>For a reliable reading</h2><ul><li>Allow precise location when your phone asks.</li><li>Use the HTTPS driver link supplied by your team.</li><li>Keep this page visible, with mobile data or Wi-Fi on.</li><li>Set up the phone while parked; use a passenger for testing.</li></ul><p id="wake-status">Screen wake lock will be requested when sharing starts, if supported.</p></div>
+    <footer>Location is shared only after you tap Start. The server keeps the last known location until it restarts.</footer>
+    <noscript>This page needs JavaScript to share your GPS location.</noscript>
+  </main>
+</body>
+</html>

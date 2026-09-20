@@ -1,5 +1,8 @@
 # Architecture
 
+> Original design plan. Read [module-status.md](module-status.md) for actual
+> imported implementation and gaps. Planned integrations are not complete.
+
 ## Product principle
 
 One onboard device produces two useful data streams:

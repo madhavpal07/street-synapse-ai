@@ -1,0 +1,3 @@
+"use client";
+import {Bus} from 'lucide-react';
+export function TransitHeader({online}:{online:boolean}){return <header className="sticky top-0 z-[600] w-full bg-white/90 backdrop-blur-md border-b border-slate-200"><div className="flex items-center justify-between px-4 py-3"><div className="flex items-center gap-2"><div className="bg-emerald-500 text-white p-1.5 rounded-lg shadow-sm"><Bus size={20}/></div><h1 className="font-semibold text-xl tracking-tight">Sawaari</h1></div><span className="text-xs text-slate-500">City Transit Live</span></div><div className={`px-4 py-1.5 text-center text-xs font-medium ${online?'bg-emerald-50 text-emerald-700':'bg-amber-50 text-amber-700'}`}>{online?'● Live feed connected':'● Reconnecting · last known locations only'}</div></header>;}

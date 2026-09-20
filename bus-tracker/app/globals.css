@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+@theme { --font-sans: Arial, sans-serif; }
+body { margin:0; }
+button, select { cursor:pointer; }

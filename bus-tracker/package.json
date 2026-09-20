@@ -1,0 +1,41 @@
+{
+  "name": "streetsynapse-bus-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "node backend/server.mjs --dev",
+    "build": "next build --webpack",
+    "start": "node backend/server.mjs",
+    "test": "node --test",
+    "test:app": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "express": "5.2.1",
+    "leaflet": "1.9.4",
+    "next": "16.3.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-leaflet": "5.0.0",
+    "socket.io": "4.8.3",
+    "socket.io-client": "4.8.3",
+    "lucide-react": "^0.553.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1",
+    "class-variance-authority": "^0.7.1",
+    "vaul": "^1.1.2"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/node": "^20",
+    "@types/leaflet": "^1.9.22",
+    "tailwindcss": "4.1.11",
+    "@tailwindcss/postcss": "4.1.11"
+  }
+}

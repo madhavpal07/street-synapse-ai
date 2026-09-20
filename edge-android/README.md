@@ -1,5 +1,9 @@
 # Edge Android module
 
+> Original future plan only. No Android source was supplied. The current driver
+> implementation is `../bus-tracker/driver/`; the phone camera prototype is
+> `../ml/live_phone_detection.py`.
+
 ## Responsibilities
 
 - CameraX frame capture

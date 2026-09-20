@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1680" viewBox="0 0 2400 1680" role="img" aria-labelledby="title desc">
+<title id="title">SAWAARI technical flowchart</title>
+<desc id="desc">A smartphone supplies two streams: live GPS telemetry through Socket.IO and Node.js to a passenger map; and camera frames with GPS to Python, OpenCV and YOLO. Accepted detections pass a time-gap filter, produce local evidence, and enter the incident backend and government dashboard. Route selection, ETA and spatial de-duplication are planned.</desc>
+<rect x="0" y="0" width="2400" height="154" rx="0" fill="#102D43" stroke="none" stroke-width="2"/>
+<text x="66" y="74.80000000000001" font-family="DejaVu Sans, Arial, sans-serif" font-size="51" font-weight="700" fill="#FFFFFF" text-anchor="start">SAWAARI</text>
+<text x="405" y="70.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="30" font-weight="700" fill="#BFE4EE" text-anchor="start">TECHNICAL FLOWCHART</text>
+<text x="68" y="127.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="24" font-weight="400" fill="#C9D9E4" text-anchor="start">Every Bus Becomes a Moving Sensor.</text>
+<text x="2324" y="70.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#C9D9E4" text-anchor="end">SYSTEM ARCHITECTURE</text>
+<rect x="724" y="183" width="952" height="130" rx="23" fill="#F5F8FC" stroke="#B6C6D3" stroke-width="2"/>
+<text x="1200" y="234.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="34" font-weight="700" fill="#142B40" text-anchor="middle">Driver smartphone on the bus</text>
+<text x="1200" y="276.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="25" font-weight="400" fill="#52687A" text-anchor="middle">Secure web link  •  Camera + GPS permission  •  Bus ID</text>
+<rect x="62" y="376" width="866" height="1174" rx="28" fill="#F1F6FF" stroke="#D9E7FA" stroke-width="2"/>
+<rect x="979" y="376" width="1360" height="1174" rx="28" fill="#EFF9F5" stroke="#D6EDE7" stroke-width="2"/>
+<text x="101" y="424.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="28" font-weight="700" fill="#1967D2" text-anchor="start">01   LIVE BUS TRACKING</text>
+<text x="1020" y="424.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="28" font-weight="700" fill="#087D72" text-anchor="start">02   POTHOLE DETECTION</text>
+<polyline points="1200,313 1200,344" fill="none" stroke="#687D8F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="1200,344 490,344 490,473" fill="none" stroke="#1967D2" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="490,473 496.0,460.0 484.0,460.0" fill="#1967D2"/>
+<polyline points="1200,344 1495,344 1495,473" fill="none" stroke="#087D72" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,473 1501.0,460.0 1489.0,460.0" fill="#087D72"/>
+<polyline points="490,606 490,679" fill="none" stroke="#1967D2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="490,679 496.0,666.0 484.0,666.0" fill="#1967D2"/>
+<polyline points="490,807 490,880" fill="none" stroke="#1967D2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="490,880 496.0,867.0 484.0,867.0" fill="#1967D2"/>
+<polyline points="490,1008 490,1081" fill="none" stroke="#1967D2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="490,1081 496.0,1068.0 484.0,1068.0" fill="#1967D2"/>
+<polyline points="490,1238 490,1304" fill="none" stroke="#1967D2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="490,1304 496.0,1291.0 484.0,1291.0" fill="#1967D2"/>
+<polyline points="837,944 895,944 895,1472 1090,1472" fill="none" stroke="#1967D2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1090,1472 1077.0,1466.0 1077.0,1478.0" fill="#1967D2"/>
+<rect x="769" y="1019" width="151" height="32" rx="3" fill="#F1F6FF" stroke="none" stroke-width="2"/>
+<text x="844" y="1039.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="400" fill="#1967D2" text-anchor="middle">Vehicle feed</text>
+<rect x="143" y="475" width="694" height="132" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="144" y="492" width="6" height="98" rx="3" fill="#1967D2" stroke="none" stroke-width="2"/>
+<text x="490.0" y="516.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#1967D2" text-anchor="middle">Capture GPS location</text>
+<text x="490.0" y="551.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">HTML5 Geolocation API</text>
+<text x="490.0" y="580.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Latitude, longitude, time + bus identity</text>
+<rect x="143" y="681" width="694" height="126" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="144" y="698" width="6" height="92" rx="3" fill="#1967D2" stroke="none" stroke-width="2"/>
+<text x="490.0" y="722.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#1967D2" text-anchor="middle">Send live telemetry</text>
+<text x="490.0" y="757.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Socket.IO</text>
+<text x="490.0" y="786.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Location updates approximately every 1 second</text>
+<rect x="143" y="882" width="694" height="126" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="144" y="899" width="6" height="92" rx="3" fill="#1967D2" stroke="none" stroke-width="2"/>
+<text x="490.0" y="923.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#1967D2" text-anchor="middle">Tracking backend</text>
+<text x="490.0" y="958.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Node.js + Express</text>
+<text x="490.0" y="987.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Driver authentication + latest bus state</text>
+<rect x="143" y="1083" width="694" height="155" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="144" y="1100" width="6" height="121" rx="3" fill="#1967D2" stroke="none" stroke-width="2"/>
+<text x="490.0" y="1124.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#1967D2" text-anchor="middle">Passenger dashboard</text>
+<text x="490.0" y="1159.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Public read-only feed → Next.js + map</text>
+<text x="490.0" y="1188.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Live / Stale / Offline + last ping time</text>
+<text x="490.0" y="1217.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Bus markers update as locations arrive</text>
+<polyline points="161,1306 819,1306" fill="none" stroke="#1967D2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="9 7"/>
+<polyline points="837,1324 837,1415" fill="none" stroke="#1967D2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="9 7"/>
+<polyline points="819,1433 161,1433" fill="none" stroke="#1967D2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="9 7"/>
+<polyline points="143,1415 143,1324" fill="none" stroke="#1967D2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="9 7"/>
+<rect x="143" y="1306" width="694" height="127" rx="18" fill="#FFFFFF" stroke="#1967D2" stroke-width="2.5" stroke-dasharray="9 7"/>
+<text x="490.0" y="1347.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#1967D2" text-anchor="middle">Route selection + ETA</text>
+<text x="490.0" y="1382.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">PLANNED</text>
+<text x="490.0" y="1411.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Stops, journey selection + arrival estimates</text>
+<text x="490" y="1486.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#1967D2" text-anchor="middle">CONTINUOUS LOCATION STREAM</text>
+<rect x="1090" y="475" width="810" height="110" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="1091" y="492" width="6" height="76" rx="3" fill="#087D72" stroke="none" stroke-width="2"/>
+<text x="1495.0" y="516.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#087D72" text-anchor="middle">Capture frames + GPS metadata</text>
+<text x="1495.0" y="551.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Phone camera → JPEG frames + coordinates + time</text>
+<rect x="1990" y="475" width="300" height="123" rx="18" fill="#FFFFFF" stroke="#A7D8CE" stroke-width="2"/>
+<text x="2140" y="513.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="24" font-weight="700" fill="#087D72" text-anchor="middle">Recorded video</text>
+<text x="2140" y="549.8" font-family="DejaVu Sans, Arial, sans-serif" font-size="21" font-weight="400" fill="#52687A" text-anchor="middle">Offline testing</text>
+<text x="2140" y="579.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="400" fill="#52687A" text-anchor="middle">GPS only if supplied</text>
+<polyline points="1990,577 1940,577 1940,655 1900,655" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1900,655 1913.0,661.0 1913.0,649.0" fill="#087D72"/>
+<polyline points="1495,585 1495,619" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,619 1501.0,606.0 1489.0,606.0" fill="#087D72"/>
+<rect x="1090" y="621" width="810" height="129" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="1091" y="638" width="6" height="95" rx="3" fill="#087D72" stroke="none" stroke-width="2"/>
+<text x="1495.0" y="662.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#087D72" text-anchor="middle">Process frames + detect potholes</text>
+<text x="1495.0" y="697.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Python + OpenCV → Ultralytics YOLO / PyTorch</text>
+<text x="1495.0" y="726.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Laptop / server inference → boxes + confidence</text>
+<polyline points="1495,750 1495,785" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,785 1501.0,772.0 1489.0,772.0" fill="#087D72"/>
+<polygon points="1495,787 1795,861 1495,935 1195,861" fill="#FFF7E8" stroke="#9A6417" stroke-width="2.5"/>
+<text x="1495" y="850.8" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="700" fill="#9A6417" text-anchor="middle">Pothole confidence</text>
+<text x="1495" y="886.8" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="700" fill="#9A6417" text-anchor="middle">meets threshold?</text>
+<polyline points="1795,861 1988,861" fill="none" stroke="#9A6417" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1988,861 1975.0,855.0 1975.0,867.0" fill="#9A6417"/>
+<text x="1860" y="843.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#9A6417" text-anchor="start">NO</text>
+<rect x="1990" y="819" width="300" height="85" rx="16" fill="#FFFFFF" stroke="#DBC6A1" stroke-width="2"/>
+<text x="2140" y="857.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="24" font-weight="700" fill="#9A6417" text-anchor="middle">Skip frame</text>
+<text x="2140" y="887.8" font-family="DejaVu Sans, Arial, sans-serif" font-size="21" font-weight="400" fill="#52687A" text-anchor="middle">Continue capture</text>
+<polyline points="1495,935 1495,978" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,978 1501.0,965.0 1489.0,965.0" fill="#087D72"/>
+<text x="1520" y="961.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#087D72" text-anchor="start">YES</text>
+<rect x="1090" y="980" width="810" height="123" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="1091" y="997" width="6" height="89" rx="3" fill="#087D72" stroke="none" stroke-width="2"/>
+<text x="1495.0" y="1021.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#087D72" text-anchor="middle">Filter repeated captures</text>
+<text x="1495.0" y="1056.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Current prototype: minimum time-gap check</text>
+<text x="1495.0" y="1085.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Nearby-GPS duplicate merging: planned</text>
+<polyline points="1900,1041 1988,1041" fill="none" stroke="#687D8F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1988,1041 1975.0,1035.0 1975.0,1047.0" fill="#687D8F"/>
+<rect x="1990" y="1004" width="300" height="76" rx="16" fill="#FFFFFF" stroke="#C8D5DC" stroke-width="2"/>
+<text x="2140" y="1034.6" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="700" fill="#687D8F" text-anchor="middle">Too soon?</text>
+<text x="2140" y="1064.8" font-family="DejaVu Sans, Arial, sans-serif" font-size="21" font-weight="400" fill="#52687A" text-anchor="middle">Skip evidence save</text>
+<polyline points="1495,1103 1495,1145" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,1145 1501.0,1132.0 1489.0,1132.0" fill="#087D72"/>
+<text x="1520" y="1128.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#087D72" text-anchor="start">ACCEPT</text>
+<rect x="1090" y="1147" width="810" height="123" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="1091" y="1164" width="6" height="89" rx="3" fill="#087D72" stroke="none" stroke-width="2"/>
+<text x="1495.0" y="1188.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#087D72" text-anchor="middle">Save local evidence</text>
+<text x="1495.0" y="1223.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">Annotated image + JSON metadata</text>
+<text x="1495.0" y="1252.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">GPS + timestamp + confidence + location link</text>
+<polyline points="1495,1270 1495,1311" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,1311 1501.0,1298.0 1489.0,1298.0" fill="#087D72"/>
+<rect x="1090" y="1313" width="810" height="111" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="1091" y="1330" width="6" height="77" rx="3" fill="#087D72" stroke="none" stroke-width="2"/>
+<text x="1495.0" y="1354.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#087D72" text-anchor="middle">Backend API + incident database</text>
+<text x="1495.0" y="1389.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="middle">/api/potholes → SQLite · PostgreSQL planned</text>
+<polyline points="1495,1424 1495,1454" fill="none" stroke="#087D72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1495,1454 1501.0,1441.0 1489.0,1441.0" fill="#087D72"/>
+<rect x="1090" y="1456" width="810" height="76" rx="18" fill="#FFFFFF" stroke="#D6E3EA" stroke-width="2.5"/>
+<rect x="1091" y="1473" width="6" height="42" rx="3" fill="#087D72" stroke="none" stroke-width="2"/>
+<text x="1495.0" y="1497.2" font-family="DejaVu Sans, Arial, sans-serif" font-size="29" font-weight="700" fill="#087D72" text-anchor="middle">Government dashboard</text>
+<text x="1937" y="1477.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="700" fill="#087D72" text-anchor="start">Hazard map</text>
+<text x="1937" y="1512.8" font-family="DejaVu Sans, Arial, sans-serif" font-size="21" font-weight="400" fill="#52687A" text-anchor="start">Evidence + incident status</text>
+<polyline points="67,1580 2335,1580" fill="none" stroke="#D6E1E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="70" y="1616.0" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#142B40" text-anchor="start">READING THE FLOW</text>
+<text x="362" y="1617.4" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#52687A" text-anchor="start">The phone supplies camera + GPS; YOLO runs in Python on a laptop/server.</text>
+<text x="362" y="1651.6" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="400" fill="#52687A" text-anchor="start">Dashed box = planned feature. Backend and dashboards show the integration architecture.</text>
+</svg>
